@@ -1,1 +1,1 @@
-Jwt Refresh Token Authentication System in .Net 6
+Jwt Refresh Token based Authentication System in .Net 6
