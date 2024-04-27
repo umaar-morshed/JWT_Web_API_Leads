@@ -74,6 +74,7 @@ namespace JWT_Web_API_Leads.Controllers
                 signingCredentials: sigining_credentials
             );
 
+            // The final json web token
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
