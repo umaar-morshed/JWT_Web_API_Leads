@@ -69,14 +69,13 @@ namespace JWT_Web_API_Leads.Controllers
 
             var sigining_credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var result = System.Text.Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:JwtTokenExpTimeMin").Value);
-                
-            Console.WriteLine(result.ToString());
+            // JWT token expiration time made configurable by defining value in appsettings.json file
+            var JwtExpTimeMinStr = _configuration.GetSection("AppSettings:JwtTokenExpTimeMin").Value;
+            int JwtExpTimeMin = int.Parse(JwtExpTimeMinStr);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5),    // configuring jwt expiration time 
+                expires: DateTime.Now.AddMinutes(JwtExpTimeMin),    // configuring jwt expiration time 
                 signingCredentials: sigining_credentials
             );
 
