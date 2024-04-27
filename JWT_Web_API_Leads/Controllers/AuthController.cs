@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace JWT_Web_API_Leads.Controllers
 {
@@ -60,17 +61,22 @@ namespace JWT_Web_API_Leads.Controllers
             };
 
 
-            /* Creating a json web token */
+            /* Creating a custom json web token authentication */
 
             // creating a key from secret key defined in appsettings
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
+                _configuration.GetSection("AppSettings:Token").Value));     // secret key defined in appsettings.json
 
             var sigining_credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
+            var result = System.Text.Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:JwtTokenExpTimeMin").Value);
+                
+            Console.WriteLine(result.ToString());
+
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(5),    // configuring jwt expiration time 
                 signingCredentials: sigining_credentials
             );
 
