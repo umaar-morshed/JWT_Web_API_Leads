@@ -67,7 +67,65 @@ namespace JWT_Web_API_Leads.Controllers
             }
 
             string jwtToken = GenerateJwtToken(user);
+
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken);
+
             return Ok(jwtToken);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<string>> RefreshToken()
+        {
+            // get refresh token from cookies
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            // validate refresh token
+            if(!user.RefreshToken.Equals(refreshToken))
+            {
+                return Unauthorized("Invalid Refresh Token");
+            }
+            else if(user.TokenExpires < DateTime.Now)
+            {
+                return Unauthorized("Token Expired.");
+            }
+
+            // if valid refresh token then generate new JWT Token
+            string token = GenerateJwtToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+            SetRefreshToken(newRefreshToken);
+
+            return Ok(token);   // returns new jwt token in the response body
+        }
+
+        private RefreshToken GenerateRefreshToken()
+        {
+            // keep refresh token expiry time configurable in appsettings.json
+            var refreshTokenExpTimeMinStr = _configuration.GetSection("AppSettings:RefreshTokenExpTimeMin").Value;
+            int refreshTokenExpTimeMin = int.Parse(refreshTokenExpTimeMinStr);
+
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddMinutes(refreshTokenExpTimeMin),
+                Created = DateTime.Now
+            };
+
+            return refreshToken;
+        }
+
+        private void SetRefreshToken(RefreshToken newRefreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newRefreshToken.Expires
+            };
+            Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
+
+            user.RefreshToken = newRefreshToken.Token;
+            user.TokenCreated = newRefreshToken.Created;
+            user.TokenExpires = newRefreshToken.Expires;
         }
 
         private string GenerateJwtToken(User user)
