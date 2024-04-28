@@ -17,19 +17,27 @@ namespace JWT_Web_API_Leads.Controllers
         // stored user
         public static User user = new User();
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
+            _userService = userService;
         }
 
         // Read claims in the controller in a secured way
         [HttpGet, Authorize]
         public ActionResult<string> GetUsername()
         {
-            // Retrieves the username of the authenticated user and returns it as part of the response.
-            var userName = User.Identity.Name;
+            var userName = _userService.GetMyUsername();
             return Ok(userName);
+            
+            /*Another Approach achieving the same outcome*/
+            /* Retrieves the username of the authenticated user and returns it as part of the response. */
+            //var userName = User.Identity.Name;
+            //var firstValueUsername = User.FindFirstValue(ClaimTypes.Name);
+            //return Ok(new { userName, firstValueUsername }); 
+            // return Ok(userName);
         }
 
         [HttpPost("register")]

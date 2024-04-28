@@ -1,3 +1,4 @@
+global using JWT_Web_API_Leads.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddHttpContextAccessor();      // default implementation of the IHttpContextAccessorService
 
 // Implemented functionality to enable inclusion of Bearer token in the Authorization header for Swagger UI access.
 builder.Services.AddSwaggerGen(options =>
