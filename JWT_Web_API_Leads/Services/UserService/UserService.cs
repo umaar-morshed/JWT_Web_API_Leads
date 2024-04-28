@@ -14,6 +14,7 @@ namespace JWT_Web_API_Leads.Services.UserService
 
         public string GetMyUsername()
         {
+            // use injected httpContextAccessor
             var result = string.Empty;
             if(_httpContextAccessor.HttpContext != null)
             {
