@@ -1,4 +1,5 @@
 ﻿using JWT_Web_API_Leads.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -20,6 +21,15 @@ namespace JWT_Web_API_Leads.Controllers
         public AuthController(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        // Read claims in the controller in a secured way
+        [HttpGet, Authorize]
+        public ActionResult<string> GetUsername()
+        {
+            // Retrieves the username of the authenticated user and returns it as part of the response.
+            var userName = User.Identity.Name;
+            return Ok(userName);
         }
 
         [HttpPost("register")]
