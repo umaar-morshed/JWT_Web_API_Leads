@@ -103,6 +103,8 @@ namespace JWT_Web_API_Leads.Controllers
             // keep refresh token expiry time configurable in appsettings.json
             var refreshTokenExpTimeMinStr = _configuration.GetSection("AppSettings:RefreshTokenExpTimeMin").Value;
             int refreshTokenExpTimeMin = int.Parse(refreshTokenExpTimeMinStr);
+            Console.WriteLine(DateTime.Now);
+            Console.WriteLine(refreshTokenExpTimeMin);
 
             var refreshToken = new RefreshToken
             {
@@ -126,6 +128,8 @@ namespace JWT_Web_API_Leads.Controllers
             user.RefreshToken = newRefreshToken.Token;
             user.TokenCreated = newRefreshToken.Created;
             user.TokenExpires = newRefreshToken.Expires;
+
+            Console.WriteLine(user.TokenExpires);
         }
 
         private string GenerateJwtToken(User user)
