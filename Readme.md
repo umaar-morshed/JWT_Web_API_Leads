@@ -12,7 +12,7 @@ This repository contains a .NET 6 backend application implementing authenticatio
 
 5. **Get JWT Protected Claims Endpoint**: Provides an API endpoint to retrieve user claims (e.g., username information) using the `HttpContextAccessor`.
 
-6. **Generate New Refresh Token Endpoint**: Allows users to generate a new refresh token after validating the existing refresh token by matching it with the refresh token stored in the user object.
+6. **Refresh Token Endpoint**: Allows users to to refresh the current token by generating a new refresh token after validating the existing refresh token by matching it with the refresh token stored in the user object.
 
 ### Next Steps
 The following tasks are yet to be completed:
